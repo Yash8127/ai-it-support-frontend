@@ -9,6 +9,7 @@ function Dashboard({
   loadTickets,
   setActivePage,
   onSelectTicket,
+  currentUser,
 }) {
   const totalTickets = tickets.length;
 
@@ -27,8 +28,11 @@ function Dashboard({
   return (
     <>
       <Header
-        title="Good afternoon, Yaswanth 👋"
+        title={`Good afternoon, ${
+          currentUser.username || "User"
+        } 👋`}
         subtitle="Here's what's happening with your IT support tickets."
+        currentUser={currentUser}
       />
 
       {error && (

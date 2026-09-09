@@ -1,4 +1,4 @@
-function Header({ title, subtitle }) {
+function Header({ title, subtitle,currentUser, }) {
   return (
     <header className="top-header">
       <div>
@@ -14,20 +14,26 @@ function Header({ title, subtitle }) {
           🔔
         </button>
 
-        <div className="profile">
+       <div className="profile">
+
           <div className="avatar">
-            Y
+            {currentUser.username
+              ? currentUser.username.charAt(0).toUpperCase()
+              : "U"}
           </div>
 
           <div>
             <strong>
-              Yaswanth
+              {currentUser.username || "User"}
             </strong>
 
             <span>
-              IT Administrator
+              {currentUser.role === "ADMIN"
+                ? "IT Administrator"
+                : "User"}
             </span>
           </div>
+
         </div>
       </div>
     </header>

@@ -2,6 +2,8 @@ function Sidebar({
   activePage,
   setActivePage,
   ticketCount,
+  onLogout,
+  currentUser,
 }) {
   return (
     <aside className="sidebar">
@@ -120,20 +122,33 @@ function Sidebar({
         <div className="user-card">
 
           <div className="avatar">
-            Y
+            {currentUser.username
+              ? currentUser.username.charAt(0).toUpperCase()
+              : "U"}
           </div>
 
           <div>
             <strong>
-              Yaswanth
+              {currentUser.username || "User"}
             </strong>
 
             <small>
-              Administrator
+              {currentUser.role === "ADMIN"
+                ? "Administrator"
+                : "User"}
             </small>
           </div>
 
         </div>
+
+        {/* LOGOUT */}
+        <button
+          className="logout-button"
+          onClick={onLogout}
+        >
+          <span>↪</span>
+          Logout
+        </button>
 
       </div>
 

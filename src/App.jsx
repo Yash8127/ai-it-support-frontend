@@ -4,7 +4,8 @@ import "./App.css";
 // =========================================================
 // COMPONENT IMPORTS
 // =========================================================
-
+import Register from "./pages/Register";
+import Login from "./pages/Login";
 import Sidebar from "./components/Sidebar";
 import Dashboard from "./pages/Dashboard";
 import Tickets from "./pages/Tickets";
@@ -13,6 +14,7 @@ import AIAssistant from "./pages/AIAssistant";
 import EditTicketModal from "./components/EditTicketModal";
 import TicketModal from "./components/TicketModal";
 import Toast from "./components/Toast";
+
 
 // =========================================================
 // API
@@ -29,6 +31,48 @@ import { API_BASE } from "./config/api";
 // =========================================================
 
 function App() {
+
+  const [isAuthenticated, setIsAuthenticated] =
+  useState(() => {
+    return Boolean(localStorage.getItem("token"));
+  });
+
+const [loginForm, setLoginForm] =
+  useState({
+    username: "",
+    password: "",
+  });
+
+
+const [loginLoading, setLoginLoading] =
+  useState(false);
+
+const [loginError, setLoginError] =
+  useState("");
+
+  
+// =========================================================
+// REGISTER STATE
+// =========================================================
+
+const [showRegister, setShowRegister] =
+  useState(false);
+
+const [registerForm, setRegisterForm] =
+  useState({
+    username: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+const [registerLoading, setRegisterLoading] =
+  useState(false);
+
+const [registerError, setRegisterError] =
+  useState("");
+
+
+
   const [activePage, setActivePage] =
     useState("dashboard");
 
@@ -40,6 +84,11 @@ function App() {
 
   const [error, setError] =
     useState("");
+
+    const [currentUser, setCurrentUser] = useState(() => ({
+      username: localStorage.getItem("username") || "",
+      role: localStorage.getItem("role") || "",
+    }));
 
   // =========================================================
   // TOAST
@@ -142,49 +191,197 @@ function App() {
 
   const [chatLoading, setChatLoading] =
     useState(false);
-
   // =========================================================
-  // LOAD TICKETS
+  // LOGINN USER
   // =========================================================
+    const loginUser = async (e) => {
+      e.preventDefault();
 
-  const loadTickets = async () => {
-    try {
-      setLoading(true);
-      setError("");
+      setLoginLoading(true);
+      setLoginError("");
 
-      const response =
-        await fetch(
-          `${API_BASE}/api/tickets`
+      try {
+        const response = await fetch(
+          `${API_BASE}/api/auth/login`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(loginForm),
+          }
         );
 
-      if (!response.ok) {
-        throw new Error(
-          "Unable to load tickets"
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(
+            data.message ||
+              "Invalid username or password"
+          );
+        }
+
+        localStorage.setItem(
+          "token",
+          data.token
         );
+
+        localStorage.setItem(
+          "username",
+          data.username
+        );
+
+        localStorage.setItem(
+          "role",
+          data.role
+        );
+        setCurrentUser({
+        username: data.username,
+        role: data.role,
+      });
+
+        setIsAuthenticated(true);
+
+        setLoginForm({
+          username: "",
+          password: "",
+        });
+
+      } catch (err) {
+        console.error(err);
+
+        setLoginError(
+          err.message ||
+            "Unable to login. Please try again."
+        );
+      } finally {
+        setLoginLoading(false);
+      }
+    };
+
+  // =========================================================
+  // REGISTER USER
+  // =========================================================
+      const registerUser = async (e) => {
+      e.preventDefault();
+
+      setRegisterError("");
+
+      if (
+        registerForm.password !==
+        registerForm.confirmPassword
+      ) {
+        setRegisterError(
+          "Passwords do not match."
+        );
+        return;
       }
 
-      const data =
-        await response.json();
+      setRegisterLoading(true);
 
-      setTickets(
-        Array.isArray(data)
-          ? data
-          : []
-      );
-    } catch (err) {
-      console.error(err);
+      try {
+        const response = await fetch(
+          `${API_BASE}/api/auth/register?username=${encodeURIComponent(
+            registerForm.username
+          )}&password=${encodeURIComponent(
+            registerForm.password
+          )}`,
+          {
+            method: "POST",
+          }
+        );
 
-      setError(
-        "Unable to load tickets. Please make sure Spring Boot is running."
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
+        const data = await response.text();
 
-  useEffect(() => {
-    loadTickets();
-  }, []);
+        if (!response.ok) {
+          throw new Error(
+            data || "Unable to create account"
+          );
+        }
+
+        setRegisterForm({
+          username: "",
+          password: "",
+          confirmPassword: "",
+        });
+
+        setRegisterError("");
+
+        setShowRegister(false);
+
+      } catch (err) {
+        console.error(err);
+
+        setRegisterError(
+          err.message ||
+          "Unable to create account"
+        );
+      } finally {
+        setRegisterLoading(false);
+      }
+    };
+
+      // =========================================================
+      // LOAD TICKETS
+      // =========================================================
+
+    const loadTickets = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        const token =
+          localStorage.getItem("token");
+
+        const response =
+          await fetch(
+            `${API_BASE}/api/tickets`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+        if (!response.ok) {
+            if (
+              response.status === 401 ||
+              response.status === 403
+            ) {
+              handleUnauthorized();
+              return;
+            }
+
+            throw new Error(
+              "Unable to load tickets"
+            );
+          }
+
+        const data =
+          await response.json();
+
+        setTickets(
+          Array.isArray(data)
+            ? data
+            : []
+        );
+
+      } catch (err) {
+        console.error(err);
+
+        setError(
+          "Unable to load tickets. Please make sure Spring Boot is running."
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    useEffect(() => {
+      if (isAuthenticated) {
+        loadTickets();
+      }
+    }, [isAuthenticated]);
 
   // =========================================================
   // CREATE TICKET
@@ -195,15 +392,19 @@ function App() {
       setCreatingTicket(true);
 
     try {
+      const token =
+  localStorage.getItem("token");
       const response =
         await fetch(
           `${API_BASE}/api/tickets`,
           {
             method: "POST",
-            headers: {
-              "Content-Type":
-                "application/json",
-            },
+           headers: {
+            "Content-Type":
+              "application/json",
+            Authorization:
+              `Bearer ${token}`,
+          },
             body: JSON.stringify({
               title:
                 newTicket.title.trim(),
@@ -213,10 +414,16 @@ function App() {
           }
         );
 
-      if (!response.ok) {
-        throw new Error(
-          "Failed to create ticket"
-        );
+     if (!response.ok) {
+        if (
+          response.status === 401 ||
+          response.status === 403
+        ) {
+          handleUnauthorized();
+          return;
+        }
+
+        throw new Error("Unable to create ticket");
       }
 
       const created =
@@ -261,18 +468,31 @@ function App() {
     }
 
     try {
+      const token =
+      localStorage.getItem("token");
       const response =
         await fetch(
           `${API_BASE}/api/tickets/${id}`,
           {
             method: "DELETE",
-          }
+             headers: {
+              Authorization:
+                `Bearer ${token}`,
+                  
+                    }
+          }      
         );
 
       if (!response.ok) {
-        throw new Error(
-          "Delete failed"
-        );
+        if (
+          response.status === 401 ||
+          response.status === 403
+        ) {
+          handleUnauthorized();
+          return;
+        }
+
+        throw new Error("Unable to delete ticket");
       }
 
       showToast(
@@ -349,16 +569,20 @@ function App() {
 
       try {
         setSavingEdit(true);
+        const token =
+          localStorage.getItem("token");
 
         const response =
           await fetch(
             `${API_BASE}/api/tickets/${editingTicket.id}`,
             {
               method: "PUT",
-              headers: {
-                "Content-Type":
-                  "application/json",
-              },
+             headers: {
+              "Content-Type":
+                "application/json",
+              Authorization:
+                `Bearer ${token}`,
+            },
               body: JSON.stringify({
                 title:
                   editForm.title,
@@ -373,9 +597,15 @@ function App() {
           );
 
         if (!response.ok) {
-          throw new Error(
-            "Failed to update ticket"
-          );
+          if (
+            response.status === 401 ||
+            response.status === 403
+          ) {
+            handleUnauthorized();
+            return;
+          }
+
+          throw new Error("Unable to update ticket");
         }
 
         const updatedTicket =
@@ -447,6 +677,8 @@ function App() {
         setSavingStatus(
           true
         );
+        const token =
+            localStorage.getItem("token");
 
         const response =
           await fetch(
@@ -455,14 +687,25 @@ function App() {
             )}`,
             {
               method: "PUT",
+               headers: {
+                Authorization:
+                  `Bearer ${token}`,
+                        },
+    
             }
           );
 
         if (!response.ok) {
-          throw new Error(
-            "Failed to update ticket status"
-          );
+        if (
+          response.status === 401 ||
+          response.status === 403
+        ) {
+          handleUnauthorized();
+          return;
         }
+
+        throw new Error("Unable to update ticket status");
+      }
 
         const updatedTicket =
           await response.json();
@@ -541,6 +784,8 @@ function App() {
       );
 
       try {
+        const token =
+          localStorage.getItem("token");
         const response =
           await fetch(
             `${API_BASE}/api/ai/chat?message=${encodeURIComponent(
@@ -548,14 +793,26 @@ function App() {
             )}`,
             {
               method: "POST",
+               headers: {
+                    Authorization:
+                      `Bearer ${token}`,
+                  },
             }
           );
 
         if (!response.ok) {
-          throw new Error(
-            "AI request failed"
-          );
+        if (
+          response.status === 401 ||
+          response.status === 403
+        ) {
+          handleUnauthorized();
+          return;
         }
+
+        throw new Error(
+          "Unable to get AI response"
+        );
+      }
 
         const data =
           await response.text();
@@ -672,15 +929,80 @@ function App() {
             onSelectTicket={
               handleSelectTicket
             }
+             currentUser={currentUser}
           />
         );
     }
   };
 
   // =========================================================
-  // APP UI
+  // LOGOUT
   // =========================================================
 
+  const logoutUser = () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("username");
+  localStorage.removeItem("role");
+
+  setCurrentUser({
+    username: "",
+    role: "",
+  });
+
+  setIsAuthenticated(false);
+
+  setTickets([]);
+};
+
+const handleUnauthorized = () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("username");
+  localStorage.removeItem("role");
+
+  setCurrentUser({
+    username: "",
+    role: "",
+  });
+
+  setIsAuthenticated(false);
+  setTickets([]);
+};
+
+  // =========================================================
+  // APP UI
+  // =========================================================
+      if (!isAuthenticated) {
+
+        if (showRegister) {
+          return (
+            <Register
+              registerForm={registerForm}
+              setRegisterForm={setRegisterForm}
+              onRegister={registerUser}
+              registerLoading={registerLoading}
+              registerError={registerError}
+              onGoToLogin={() => {
+                setShowRegister(false);
+                setRegisterError("");
+              }}
+            />
+          );
+        }
+
+        return (
+          <Login
+            loginForm={loginForm}
+            setLoginForm={setLoginForm}
+            onLogin={loginUser}
+            loginLoading={loginLoading}
+            loginError={loginError}
+            onGoToRegister={() => {
+              setShowRegister(true);
+              setLoginError("");
+            }}
+          />
+        );
+      }
   return (
     <div className="app">
 
@@ -703,6 +1025,8 @@ function App() {
         ticketCount={
           tickets.length
         }
+        onLogout={logoutUser}
+        currentUser={currentUser}
       />
 
       <main className="main-content">
