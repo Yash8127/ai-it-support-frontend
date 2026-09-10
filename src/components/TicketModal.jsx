@@ -7,6 +7,7 @@ function TicketModal({
   onClose,
   onDelete,
   onEdit,
+  currentUser,
 }) {
   return (
     <div
@@ -89,80 +90,77 @@ function TicketModal({
             CHANGE STATUS
         ================================================= */}
 
-        <div className="status-management">
+        {currentUser?.role === "ADMIN" && (
+            <div className="status-management">
 
-          <div className="status-management-header">
+              <div className="status-management-header">
 
-            <div>
-              <h3>
-                Change Status
-              </h3>
+                <div>
+                  <h3>
+                    Change Status
+                  </h3>
 
-              <p>
-                Update the current lifecycle
-                status of this ticket.
-              </p>
+                  <p>
+                    Update the current lifecycle
+                    status of this ticket.
+                  </p>
+                </div>
+
+                <span
+                  className={`badge status-${selectedStatus
+                    ?.toLowerCase()
+                    .replace("_", "-")}`}
+                >
+                  {selectedStatus}
+                </span>
+
+              </div>
+
+              <div className="status-controls">
+
+                <select
+                  value={selectedStatus}
+                  onChange={(e) =>
+                    setSelectedStatus(
+                      e.target.value
+                    )
+                  }
+                  disabled={savingStatus}
+                >
+                  <option value="OPEN">
+                    OPEN
+                  </option>
+
+                  <option value="IN_PROGRESS">
+                    IN_PROGRESS
+                  </option>
+
+                  <option value="RESOLVED">
+                    RESOLVED
+                  </option>
+
+                  <option value="CLOSED">
+                    CLOSED
+                  </option>
+                </select>
+
+                <button
+                  className="primary-button"
+                  onClick={onStatusChange}
+                  disabled={
+                    savingStatus ||
+                    selectedStatus === ticket.status
+                  }
+                >
+                  {savingStatus
+                    ? "Updating..."
+                    : "✓ Update Status"}
+                </button>
+
+              </div>
+
             </div>
-
-            <span
-              className={`badge status-${selectedStatus
-                ?.toLowerCase()
-                .replace("_", "-")}`}
-            >
-              {selectedStatus}
-            </span>
-
-          </div>
-
-
-          <div className="status-controls">
-
-            <select
-              value={selectedStatus}
-              onChange={(e) =>
-                setSelectedStatus(
-                  e.target.value
-                )
-              }
-              disabled={savingStatus}
-            >
-
-              <option value="OPEN">
-                OPEN
-              </option>
-
-              <option value="IN_PROGRESS">
-                IN_PROGRESS
-              </option>
-
-              <option value="RESOLVED">
-                RESOLVED
-              </option>
-
-              <option value="CLOSED">
-                CLOSED
-              </option>
-
-            </select>
-
-
-            <button
-              className="primary-button"
-              onClick={onStatusChange}
-              disabled={
-                savingStatus ||
-                selectedStatus ===
-                  ticket.status
-              }
-            >
-              {savingStatus
-                ? "Updating..."
-                : "✓ Update Status"}
-            </button>
-
-          </div>
-
-        </div>
+          )}
 
 
         {/* =================================================
@@ -220,6 +218,7 @@ function TicketModal({
           </button>
 
 
+        {currentUser?.role === "ADMIN" && (
           <button
             className="danger-button"
             onClick={() =>
@@ -228,6 +227,7 @@ function TicketModal({
           >
             Delete Ticket
           </button>
+        )}
 
 
           <button

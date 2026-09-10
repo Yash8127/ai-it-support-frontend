@@ -316,7 +316,7 @@ const [loginError, setLoginError] =
             password: "",
             confirmPassword: "",
           });
-          
+
           setTimeout(() => {
             setShowRegister(false);
             setRegisterSuccess("");
@@ -1081,6 +1081,7 @@ const handleUnauthorized = () => {
           onEdit={
             startEditTicket
           }
+          currentUser={currentUser}
         />
       )}
 
