@@ -5,12 +5,14 @@ function AIAssistant({
   chatMessages,
   chatLoading,
   sendChatMessage,
+  currentUser,
 }) {
   return (
     <>
       <Header
         title="AI Assistant"
         subtitle="Ask questions about your IT support tickets."
+        currentUser={currentUser}
       />
 
       <div className="chat-container">

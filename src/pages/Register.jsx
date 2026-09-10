@@ -4,6 +4,7 @@ function Register({
   onRegister,
   registerLoading,
   registerError,
+  registerSuccess,
   onGoToLogin,
 }) {
   return (
@@ -40,6 +41,13 @@ function Register({
         {registerError && (
           <div className="login-error">
             {registerError}
+          </div>
+        )}
+        
+        {/* SUCCESS */}
+        {registerSuccess && (
+          <div className="register-success">
+            {registerSuccess}
           </div>
         )}
 

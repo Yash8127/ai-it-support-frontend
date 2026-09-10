@@ -2493,3 +2493,14 @@ tbody tr:hover {
   color: #1d4ed8;
   text-decoration: underline;
 }
+
+.register-success {
+  margin-bottom: 16px;
+  padding: 10px 12px;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  background: #f0fdf4;
+  color: #15803d;
+  font-size: 11px;
+  line-height: 1.5;
+}

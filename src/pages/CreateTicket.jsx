@@ -8,12 +8,14 @@ function CreateTicket({
   createdTicket,
   setCreatedTicket,
   creatingTicket,
+  currentUser,
 }) {
   return (
     <>
       <Header
         title="Create Ticket"
         subtitle="Create a new IT support request."
+        currentUser={currentUser}
       />
 
       <div className="form-layout">

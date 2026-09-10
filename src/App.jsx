@@ -55,21 +55,21 @@ const [loginError, setLoginError] =
 // REGISTER STATE
 // =========================================================
 
-const [showRegister, setShowRegister] =
-  useState(false);
+  const [showRegister, setShowRegister] =
+    useState(false);
 
-const [registerForm, setRegisterForm] =
-  useState({
-    username: "",
-    password: "",
-    confirmPassword: "",
-  });
+  const [registerForm, setRegisterForm] =
+    useState({
+      username: "",
+      password: "",
+      confirmPassword: "",
+    });
 
-const [registerLoading, setRegisterLoading] =
-  useState(false);
+  const [registerLoading, setRegisterLoading] =
+    useState(false);
 
-const [registerError, setRegisterError] =
-  useState("");
+  const [registerError, setRegisterError] = useState("");
+  const [registerSuccess, setRegisterSuccess] = useState("");
 
 
 
@@ -263,67 +263,80 @@ const [registerError, setRegisterError] =
   // REGISTER USER
   // =========================================================
       const registerUser = async (e) => {
-      e.preventDefault();
-
-      setRegisterError("");
-
-      if (
-        registerForm.password !==
-        registerForm.confirmPassword
-      ) {
-        setRegisterError(
-          "Passwords do not match."
-        );
-        return;
-      }
-
-      setRegisterLoading(true);
-
-      try {
-        const response = await fetch(
-          `${API_BASE}/api/auth/register?username=${encodeURIComponent(
-            registerForm.username
-          )}&password=${encodeURIComponent(
-            registerForm.password
-          )}`,
-          {
-            method: "POST",
-          }
-        );
-
-        const data = await response.text();
-
-        if (!response.ok) {
-          throw new Error(
-            data || "Unable to create account"
-          );
-        }
-
-        setRegisterForm({
-          username: "",
-          password: "",
-          confirmPassword: "",
-        });
+        e.preventDefault();
 
         setRegisterError("");
+        setRegisterSuccess("");
 
-        setShowRegister(false);
+        if (
+          registerForm.password !==
+          registerForm.confirmPassword
+        ) {
+          setRegisterError(
+            "Passwords do not match."
+          );
+          return;
+        }
 
-      } catch (err) {
-        console.error(err);
+        setRegisterLoading(true);
 
-        setRegisterError(
-          err.message ||
-          "Unable to create account"
-        );
-      } finally {
-        setRegisterLoading(false);
-      }
-    };
+        try {
+          const response = await fetch(
+            `${API_BASE}/api/auth/register?username=${encodeURIComponent(
+              registerForm.username
+            )}&password=${encodeURIComponent(
+              registerForm.password
+            )}`,
+            {
+              method: "POST",
+            }
+          );
 
-      // =========================================================
-      // LOAD TICKETS
-      // =========================================================
+          const data = await response.text();
+
+          if (!response.ok) {
+            throw new Error(
+              data || "Unable to create account"
+            );
+          }
+
+          if (data === "Username already exists") {
+            setRegisterError(
+              "Username already exists. Please choose another username."
+            );
+            return;
+          }
+
+          setRegisterSuccess(
+            "Account created successfully! You can now sign in."
+          );
+
+          setRegisterForm({
+            username: "",
+            password: "",
+            confirmPassword: "",
+          });
+          
+          setTimeout(() => {
+            setShowRegister(false);
+            setRegisterSuccess("");
+          }, 1500);
+
+        } catch (err) {
+          console.error(err);
+
+          setRegisterError(
+            err.message ||
+            "Unable to create account"
+          );
+        } finally {
+          setRegisterLoading(false);
+        }
+      };
+
+  // =========================================================
+  // LOAD TICKETS
+  // =========================================================
 
     const loadTickets = async () => {
       try {
@@ -887,6 +900,7 @@ const [registerError, setRegisterError] =
             onSelectTicket={
               handleSelectTicket
             }
+            currentUser={currentUser}
           />
         );
 
@@ -900,6 +914,7 @@ const [registerError, setRegisterError] =
             createdTicket={createdTicket}
             setCreatedTicket={setCreatedTicket}
             creatingTicket={creatingTicket}
+            currentUser={currentUser}
             />
           );
 
@@ -911,6 +926,7 @@ const [registerError, setRegisterError] =
             chatMessages={chatMessages}
             chatLoading={chatLoading}
             sendChatMessage={sendChatMessage}
+            currentUser={currentUser}
           />
         );
 
@@ -981,9 +997,11 @@ const handleUnauthorized = () => {
               onRegister={registerUser}
               registerLoading={registerLoading}
               registerError={registerError}
+              registerSuccess={registerSuccess}
               onGoToLogin={() => {
                 setShowRegister(false);
                 setRegisterError("");
+                setRegisterSuccess("");
               }}
             />
           );

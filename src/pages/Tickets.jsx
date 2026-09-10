@@ -12,6 +12,7 @@ function Tickets({
   setStatusFilter,
   loadTickets,
   onSelectTicket,
+  currentUser,
 }) {
   const filteredTickets = tickets.filter(
     (ticket) => {
@@ -51,7 +52,8 @@ function Tickets({
     <>
       <Header
         title="Tickets"
-        subtitle="View and manage all IT support tickets."
+        subtitle="Manage and track your IT support tickets."
+        currentUser={currentUser}
       />
 
       <div className="panel">
