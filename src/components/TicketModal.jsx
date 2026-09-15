@@ -1,3 +1,5 @@
+import TicketHistory from "./TicketHistory";
+
 function TicketModal({
   ticket,
   selectedStatus,
@@ -16,9 +18,7 @@ function TicketModal({
     >
       <div
         className="ticket-modal"
-        onClick={(e) =>
-          e.stopPropagation()
-        }
+        onClick={(e) => e.stopPropagation()}
       >
 
         {/* =================================================
@@ -27,14 +27,16 @@ function TicketModal({
 
         <div className="modal-header">
 
-          <div>
+          <div className="modal-header-content">
+
             <span className="modal-ticket-id">
-              Ticket #{ticket.id}
+              Ticket <strong>#{ticket.id}</strong>
             </span>
 
             <h2>
               {ticket.title}
             </h2>
+
           </div>
 
           <button
@@ -48,54 +50,71 @@ function TicketModal({
 
 
         {/* =================================================
-            TICKET INFORMATION
+            SCROLLABLE MODAL BODY
         ================================================= */}
 
-        <div className="modal-grid">
+        <div className="ticket-modal-body">
 
-          <div>
-            <span>
-              Category
-            </span>
 
-            <strong>
-              {ticket.category}
-            </strong>
+          {/* =================================================
+              TICKET INFORMATION
+          ================================================= */}
+
+          <div className="modal-grid">
+
+            <div className="ticket-info-card">
+
+              <span>
+                Category
+              </span>
+
+              <strong>
+                {ticket.category}
+              </strong>
+
+            </div>
+
+
+            <div className="ticket-info-card">
+
+              <span>
+                Priority
+              </span>
+
+              <strong>
+                {ticket.priority}
+              </strong>
+
+            </div>
+
+
+            <div className="ticket-info-card">
+
+              <span>
+                Status
+              </span>
+
+              <strong className="status-value">
+                {ticket.status}
+              </strong>
+
+            </div>
+
           </div>
 
-          <div>
-            <span>
-              Priority
-            </span>
 
-            <strong>
-              {ticket.priority}
-            </strong>
-          </div>
+          {/* =================================================
+              CHANGE STATUS
+          ================================================= */}
 
-          <div>
-            <span>
-              Status
-            </span>
+          {currentUser?.role === "ADMIN" && (
 
-            <strong>
-              {ticket.status}
-            </strong>
-          </div>
-
-        </div>
-
-
-        {/* =================================================
-            CHANGE STATUS
-        ================================================= */}
-
-        {currentUser?.role === "ADMIN" && (
             <div className="status-management">
 
               <div className="status-management-header">
 
                 <div>
+
                   <h3>
                     Change Status
                   </h3>
@@ -104,6 +123,7 @@ function TicketModal({
                     Update the current lifecycle
                     status of this ticket.
                   </p>
+
                 </div>
 
                 <span
@@ -116,17 +136,17 @@ function TicketModal({
 
               </div>
 
+
               <div className="status-controls">
 
                 <select
                   value={selectedStatus}
                   onChange={(e) =>
-                    setSelectedStatus(
-                      e.target.value
-                    )
+                    setSelectedStatus(e.target.value)
                   }
                   disabled={savingStatus}
                 >
+
                   <option value="OPEN">
                     OPEN
                   </option>
@@ -142,7 +162,9 @@ function TicketModal({
                   <option value="CLOSED">
                     CLOSED
                   </option>
+
                 </select>
+
 
                 <button
                   className="primary-button"
@@ -152,82 +174,102 @@ function TicketModal({
                     selectedStatus === ticket.status
                   }
                 >
+
                   {savingStatus
                     ? "Updating..."
                     : "✓ Update Status"}
+
                 </button>
 
               </div>
 
             </div>
+
           )}
 
 
-        {/* =================================================
-            DESCRIPTION
-        ================================================= */}
+          {/* =================================================
+              DESCRIPTION
+          ================================================= */}
 
-        <div className="modal-section">
+          <div className="modal-section">
 
-          <h3>
-            Description
-          </h3>
+            <h3>
+              Description
+            </h3>
 
-          <p>
-            {ticket.description ||
-              "No description available."}
-          </p>
+            <div className="description-box">
+
+              <p>
+                {ticket.description ||
+                  "No description available."}
+              </p>
+
+            </div>
+
+          </div>
+
+
+          {/* =================================================
+              AI SUGGESTION
+          ================================================= */}
+
+          {ticket.aiSuggestion && (
+
+            <div className="ai-suggestion">
+
+              <strong>
+                ✦ AI Suggestion
+              </strong>
+
+              <p>
+                {ticket.aiSuggestion}
+              </p>
+
+            </div>
+
+          )}
+
+
+          {/* =================================================
+              ACTIVITY HISTORY
+          ================================================= */}
+
+          <TicketHistory
+            ticketId={ticket.id}
+          />
 
         </div>
 
 
         {/* =================================================
-            AI SUGGESTION
-        ================================================= */}
-
-        {ticket.aiSuggestion && (
-
-          <div className="ai-suggestion">
-
-            <strong>
-              ✦ AI Suggestion
-            </strong>
-
-            <p>
-              {ticket.aiSuggestion}
-            </p>
-
-          </div>
-
-        )}
-
-
-        {/* =================================================
-            ACTION BUTTONS
+            FIXED FOOTER ACTIONS
         ================================================= */}
 
         <div className="modal-actions">
 
-          <button
-            className="primary-button"
-            onClick={() =>
-              onEdit(ticket)
-            }
-          >
-            ✎ Edit Ticket
-          </button>
+          <div className="modal-primary-actions">
+
+            <button
+              className="primary-button edit-button"
+              onClick={() => onEdit(ticket)}
+            >
+              ✎ Edit Ticket
+            </button>
 
 
-        {currentUser?.role === "ADMIN" && (
-          <button
-            className="danger-button"
-            onClick={() =>
-              onDelete(ticket.id)
-            }
-          >
-            Delete Ticket
-          </button>
-        )}
+            {currentUser?.role === "ADMIN" && (
+
+              <button
+                className="danger-button"
+                onClick={() => onDelete(ticket.id)}
+              >
+                🗑 Delete Ticket
+              </button>
+
+            )}
+
+          </div>
 
 
           <button

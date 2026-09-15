@@ -25,13 +25,29 @@ function Dashboard({
     (ticket) => ticket.status === "RESOLVED"
   ).length;
 
+    const currentHour = new Date().getHours();
+
+      let greeting;
+
+      if (currentHour < 12) {
+        greeting = "Good morning";
+      } else if (currentHour < 17) {
+        greeting = "Good afternoon";
+      } else {
+        greeting = "Good evening";
+      }
+
   return (
     <>
       <Header
-        title={`Good afternoon, ${
+        title={`${greeting}, ${
           currentUser.username || "User"
         } 👋`}
-        subtitle="Here's what's happening with your IT support tickets."
+        subtitle={
+          currentUser.role === "ADMIN"
+            ? "Here's what's happening across the IT support system."
+            : "Here's what's happening with your IT support tickets."
+        }
         currentUser={currentUser}
       />
 

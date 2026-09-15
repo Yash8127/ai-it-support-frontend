@@ -182,10 +182,9 @@ const [loginError, setLoginError] =
 
   const [chatMessages, setChatMessages] =
     useState([
-      {
+    {
         role: "assistant",
-        text:
-          "Hello Yaswanth! 👋 I'm your AI IT Support Assistant. How can I help you today?",
+        text: `Hello ${currentUser?.username || "there"}! 👋 I'm your AI IT Support Assistant. How can I help you today?`
       },
     ]);
 
