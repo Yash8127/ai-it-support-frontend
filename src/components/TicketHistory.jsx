@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
 
-function TicketHistory({ ticketId }) {
+function TicketHistory({ ticketId,
+                        ticketStatus,  
+                        ticketPriority,
+                        ticketTitle,
+                        ticketDescription,
+                        ticketCategory,
+                       }) {
 
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -58,7 +64,13 @@ function TicketHistory({ ticketId }) {
       fetchHistory();
     }
 
-  }, [ticketId]);
+  }, [ticketId ,
+      ticketStatus ,
+      ticketPriority,
+      ticketTitle,
+      ticketDescription,
+      ticketCategory,
+    ]);
 
 
   return (

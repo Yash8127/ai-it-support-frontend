@@ -72,6 +72,21 @@ function Sidebar({
           <span>＋</span>
           Create Ticket
         </button>
+        {currentUser?.role === "ADMIN" && (
+  <button
+    className={`menu-item ${
+      activePage === "deleted"
+        ? "active"
+        : ""
+    }`}
+    onClick={() =>
+      setActivePage("deleted")
+    }
+  >
+    <span>◫</span>
+    Deleted Tickets
+  </button>
+)}
 
       </div>
 

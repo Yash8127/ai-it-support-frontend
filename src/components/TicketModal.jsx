@@ -237,6 +237,11 @@ function TicketModal({
 
           <TicketHistory
             ticketId={ticket.id}
+             ticketStatus={ticket.status}
+             ticketPriority={ticket.priority}
+            sticketTitle={ticket.title}
+            ticketDescription={ticket.description}
+            ticketCategory={ticket.category}
           />
 
         </div>

@@ -14,7 +14,7 @@ import AIAssistant from "./pages/AIAssistant";
 import EditTicketModal from "./components/EditTicketModal";
 import TicketModal from "./components/TicketModal";
 import Toast from "./components/Toast";
-
+import DeletedTickets from "./pages/DeletedTickets";
 
 // =========================================================
 // API
@@ -78,6 +78,7 @@ const [loginError, setLoginError] =
 
   const [tickets, setTickets] =
     useState([]);
+    const [analytics, setAnalytics] = useState(null);
 
   const [loading, setLoading] =
     useState(true);
@@ -377,6 +378,7 @@ const [loginError, setLoginError] =
             ? data
             : []
         );
+        await loadAnalytics();
 
       } catch (err) {
         console.error(err);
@@ -389,12 +391,38 @@ const [loginError, setLoginError] =
       }
     };
 
-    useEffect(() => {
+   
+    const loadAnalytics = async () => {
+        try {
+          const token = localStorage.getItem("token");
+
+          const response = await fetch(
+            "http://localhost:8080/api/dashboard/analytics",
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          if (!response.ok) {
+            throw new Error("Failed to load dashboard analytics");
+          }
+
+          const data = await response.json();
+
+          setAnalytics(data);
+        } catch (error) {
+          console.error("Analytics error:", error);
+        }
+      };
+
+      useEffect(() => {
       if (isAuthenticated) {
         loadTickets();
+        loadAnalytics();
       }
     }, [isAuthenticated]);
-
   // =========================================================
   // CREATE TICKET
   // =========================================================
@@ -451,6 +479,7 @@ const [loginError, setLoginError] =
       );
 
       await loadTickets();
+      
     } catch (err) {
       console.error(err);
 
@@ -916,6 +945,11 @@ const [loginError, setLoginError] =
             currentUser={currentUser}
             />
           );
+      
+      case "deleted":
+        return (
+          <DeletedTickets />
+        );
 
       case "assistant":
         return (
@@ -933,6 +967,7 @@ const [loginError, setLoginError] =
         return (
           <Dashboard
             tickets={tickets}
+            analytics={analytics}
             loading={loading}
             error={error}
             loadTickets={
@@ -967,6 +1002,10 @@ const [loginError, setLoginError] =
   setIsAuthenticated(false);
 
   setTickets([]);
+
+  setActivePage("dashboard");
+  setSelectedTicket(null);
+  setEditingTicket(null);
 };
 
 const handleUnauthorized = () => {
@@ -981,6 +1020,10 @@ const handleUnauthorized = () => {
 
   setIsAuthenticated(false);
   setTickets([]);
+
+  setActivePage("dashboard");
+  setSelectedTicket(null);
+  setEditingTicket(null);
 };
 
   // =========================================================
