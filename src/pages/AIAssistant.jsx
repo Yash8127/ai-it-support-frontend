@@ -6,6 +6,8 @@ function AIAssistant({
   chatLoading,
   sendChatMessage,
   currentUser,
+  unreadNotificationCount,
+ setActivePage,
 }) {
   return (
     <>
@@ -13,6 +15,8 @@ function AIAssistant({
         title="AI Assistant"
         subtitle="Ask questions about your IT support tickets."
         currentUser={currentUser}
+        unreadNotificationCount={unreadNotificationCount}
+        setActivePage={setActivePage}
       />
 
       <div className="chat-container">

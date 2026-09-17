@@ -5,6 +5,8 @@ function CreateTicket({
   setNewTicket,
   createTicket,
   setActivePage,
+  
+  unreadNotificationCount,
   createdTicket,
   setCreatedTicket,
   creatingTicket,
@@ -16,6 +18,8 @@ function CreateTicket({
         title="Create Ticket"
         subtitle="Create a new IT support request."
         currentUser={currentUser}
+        unreadNotificationCount={unreadNotificationCount}
+        setActivePage={setActivePage}
       />
 
       <div className="form-layout">
@@ -222,106 +226,106 @@ function CreateTicket({
                TICKET CREATED
             ================================================= */
 
-            <div className="ticket-created-result">
+          <div className="ticket-created-result">
 
-              <div className="success-icon">
-                ✓
-              </div>
+            <div className="success-icon">
+              ✓
+            </div>
 
-              <h2>
-                Ticket Created Successfully
-              </h2>
+            <h2>
+              Ticket Created Successfully
+            </h2>
 
-              <p>
-                Ticket #{createdTicket.id} has been
-                created and analyzed by AI.
-              </p>
+            <p className="success-message">
+              Your support ticket has been created successfully.
+              Our AI assistant has analyzed the ticket and generated
+              an initial recommendation.
+            </p>
 
-              <div className="ai-analysis-card">
+            <div className="ticket-id-message">
+              <span>Ticket ID</span>
+              <strong>#{createdTicket.id}</strong>
+            </div>
 
-                <div className="analysis-header">
+            <div className="ai-analysis-card">
 
-                  <span>✦</span>
-
-                  <h3>
-                    AI Analysis
-                  </h3>
-
+              <div className="analysis-header">
+                <div className="analysis-icon">
+                  ✦
                 </div>
 
-                <div className="analysis-grid">
-
-                  <div>
-
-                    <span>
-                      Category
-                    </span>
-
-                    <strong>
-                      {createdTicket.category}
-                    </strong>
-
-                  </div>
-
-                  <div>
-
-                    <span>
-                      Priority
-                    </span>
-
-                    <strong>
-                      {createdTicket.priority}
-                    </strong>
-
-                  </div>
-
-                </div>
-
-                <div className="suggestion-box">
-
-                  <strong>
-                    Suggested Resolution
-                  </strong>
-
+                <div>
+                  <h3>AI Analysis</h3>
                   <p>
-                    {createdTicket.aiSuggestion ||
-                      "No AI suggestion available."}
+                    Automatic analysis of your support request
                   </p>
+                </div>
+              </div>
 
+              <div className="analysis-grid">
+
+                <div className="analysis-item">
+                  <span>Category</span>
+                  <strong>
+                    {createdTicket.category}
+                  </strong>
+                </div>
+
+                <div className="analysis-item">
+                  <span>Priority</span>
+                  <strong>
+                    {createdTicket.priority}
+                  </strong>
                 </div>
 
               </div>
 
-              <div className="form-actions">
+              <div className="suggestion-box">
 
-                <button
-                  type="button"
-                  className="secondary-button"
-                  onClick={() => {
-                    setCreatedTicket(null);
+                <div className="suggestion-title">
+                  <span>💡</span>
+                  <strong>Suggested Resolution</strong>
+                </div>
 
-                    setNewTicket({
-                      title: "",
-                      description: "",
-                    });
-                  }}
-                >
-                  Create Another
-                </button>
-
-                <button
-                  type="button"
-                  className="primary-button"
-                  onClick={() =>
-                    setActivePage("tickets")
-                  }
-                >
-                  View Tickets →
-                </button>
+                <p>
+                  {createdTicket.aiSuggestion ||
+                    "No AI suggestion available."}
+                </p>
 
               </div>
 
             </div>
+
+            <div className="form-actions">
+
+              <button
+                type="button"
+                className="secondary-button"
+                onClick={() => {
+                  setCreatedTicket(null);
+
+                  setNewTicket({
+                    title: "",
+                    description: "",
+                  });
+                }}
+              >
+                Create Another
+              </button>
+
+              <button
+                type="button"
+                className="primary-button"
+                onClick={() =>
+                  setActivePage("tickets")
+                }
+              >
+                View Tickets →
+              </button>
+
+            </div>
+
+          </div>
           )}
 
         </div>

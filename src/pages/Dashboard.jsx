@@ -10,6 +10,7 @@ function Dashboard({
   setActivePage,
   onSelectTicket,
   currentUser,
+  unreadNotificationCount,
 }) {
       const totalTickets = analytics?.totalTickets || 0;
 
@@ -57,6 +58,8 @@ function Dashboard({
             : "Here's what's happening with your IT support tickets."
         }
         currentUser={currentUser}
+        unreadNotificationCount={unreadNotificationCount}
+         setActivePage={setActivePage}
       />
 
       {error && (

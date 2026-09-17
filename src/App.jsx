@@ -15,6 +15,7 @@ import EditTicketModal from "./components/EditTicketModal";
 import TicketModal from "./components/TicketModal";
 import Toast from "./components/Toast";
 import DeletedTickets from "./pages/DeletedTickets";
+import Notifications from "./pages/Notifications";
 
 // =========================================================
 // API
@@ -79,6 +80,7 @@ const [loginError, setLoginError] =
   const [tickets, setTickets] =
     useState([]);
     const [analytics, setAnalytics] = useState(null);
+    const [unreadNotificationCount, setUnreadNotificationCount] = useState(0);
 
   const [loading, setLoading] =
     useState(true);
@@ -390,7 +392,9 @@ const [loginError, setLoginError] =
         setLoading(false);
       }
     };
-
+     // =========================================================
+    // LOAD ANALYTICS
+    // =========================================================
    
     const loadAnalytics = async () => {
         try {
@@ -421,8 +425,46 @@ const [loginError, setLoginError] =
       if (isAuthenticated) {
         loadTickets();
         loadAnalytics();
+        loadNotificationCount();
       }
     }, [isAuthenticated]);
+
+
+  // =========================================================
+  // LOAD NOTIFICATIONNS
+  // =========================================================
+
+  const loadNotificationCount = async () => {
+  try {
+    const token = localStorage.getItem("token");
+
+    const response = await fetch(
+      `${API_BASE}/api/notifications/unread/count`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(
+        "Failed to load notification count"
+      );
+    }
+
+    const count = await response.json();
+
+    setUnreadNotificationCount(count);
+
+  } catch (error) {
+    console.error(
+      "Notification count error:",
+      error
+    );
+  }
+};
+
   // =========================================================
   // CREATE TICKET
   // =========================================================
@@ -472,6 +514,8 @@ const [loginError, setLoginError] =
       setCreatedTicket(
         created
       );
+
+      await loadNotificationCount();
 
       showToast(
         "Ticket created and analyzed successfully.",
@@ -677,6 +721,7 @@ const [loginError, setLoginError] =
         );
 
         await loadTickets();
+        await loadNotificationCount();
       } catch (err) {
         console.error(err);
 
@@ -776,6 +821,7 @@ const [loginError, setLoginError] =
         );
 
         await loadTickets();
+        
       } catch (err) {
         console.error(err);
 
@@ -929,6 +975,9 @@ const [loginError, setLoginError] =
               handleSelectTicket
             }
             currentUser={currentUser}
+            unreadNotificationCount={unreadNotificationCount}
+            setActivePage={setActivePage}
+            
           />
         );
 
@@ -939,16 +988,28 @@ const [loginError, setLoginError] =
             setNewTicket={setNewTicket}
             createTicket={createTicket}
             setActivePage={setActivePage}
+            loadNotificationCount={loadNotificationCount}
+            unreadNotificationCount={unreadNotificationCount}
             createdTicket={createdTicket}
             setCreatedTicket={setCreatedTicket}
             creatingTicket={creatingTicket}
             currentUser={currentUser}
+            
             />
           );
       
       case "deleted":
         return (
           <DeletedTickets />
+        );
+
+      case "notifications":
+        return (
+          <Notifications
+            currentUser={currentUser}
+            unreadNotificationCount={unreadNotificationCount}
+             setUnreadNotificationCount={setUnreadNotificationCount}
+          />
         );
 
       case "assistant":
@@ -960,6 +1021,8 @@ const [loginError, setLoginError] =
             chatLoading={chatLoading}
             sendChatMessage={sendChatMessage}
             currentUser={currentUser}
+            unreadNotificationCount={unreadNotificationCount}       
+            setActivePage={setActivePage}
           />
         );
 
@@ -980,6 +1043,7 @@ const [loginError, setLoginError] =
               handleSelectTicket
             }
              currentUser={currentUser}
+             unreadNotificationCount={unreadNotificationCount}
           />
         );
     }

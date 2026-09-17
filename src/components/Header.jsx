@@ -1,4 +1,11 @@
-function Header({ title, subtitle,currentUser, }) {
+function Header({ 
+    title,
+    subtitle,
+    currentUser,
+    unreadNotificationCount,
+    setActivePage,
+
+  }) {
   return (
     <header className="top-header">
       <div>
@@ -8,10 +15,19 @@ function Header({ title, subtitle,currentUser, }) {
 
       <div className="header-actions">
         <button
-          className="icon-button"
+          className="icon-button notification-button"
           type="button"
+          onClick={() => setActivePage("notifications")}
         >
-          🔔
+          🔔 
+           {unreadNotificationCount > 0 && (
+                <span className="notification-badge">
+                  {unreadNotificationCount > 99
+                    ? "99+"
+                    : unreadNotificationCount}
+                </span>
+              )}
+            
         </button>
 
        <div className="profile">

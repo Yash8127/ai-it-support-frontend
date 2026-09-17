@@ -13,6 +13,8 @@ function Tickets({
   loadTickets,
   onSelectTicket,
   currentUser,
+  unreadNotificationCount,
+  setActivePage,
 }) {
   const filteredTickets = tickets.filter(
     (ticket) => {
@@ -54,6 +56,8 @@ function Tickets({
         title="Tickets"
         subtitle="Manage and track your IT support tickets."
         currentUser={currentUser}
+        unreadNotificationCount={unreadNotificationCount}
+        setActivePage={setActivePage}
       />
 
       <div className="panel">
