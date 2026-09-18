@@ -4,9 +4,25 @@ function Sidebar({
   ticketCount,
   onLogout,
   currentUser,
+   mobileSidebarOpen,
+  setMobileSidebarOpen,
 }) {
   return (
-    <aside className="sidebar">
+    <>
+    <aside
+        className={`sidebar ${
+          mobileSidebarOpen
+            ? "mobile-open"
+            : ""
+        }`}
+      >
+        <button
+          className="mobile-close-button"
+          type="button"
+          onClick={() => setMobileSidebarOpen(false)}
+        >
+          ×
+        </button>
 
       {/* BRAND */}
       <div className="brand">
@@ -33,9 +49,10 @@ function Sidebar({
               ? "active"
               : ""
           }`}
-          onClick={() =>
-            setActivePage("dashboard")
-          }
+          onClick={() => {
+            setActivePage("dashboard");
+            setMobileSidebarOpen(false);
+          }}
         >
           <span>▦</span>
           Dashboard
@@ -47,9 +64,11 @@ function Sidebar({
               ? "active"
               : ""
           }`}
-          onClick={() =>
+          onClick={() =>{
             setActivePage("tickets")
-          }
+            setMobileSidebarOpen(false);
+            
+          }}
         >
           <span>▤</span>
           Tickets
@@ -65,28 +84,30 @@ function Sidebar({
               ? "active"
               : ""
           }`}
-          onClick={() =>
+          onClick={() =>{
             setActivePage("create")
-          }
+            setMobileSidebarOpen(false);
+          }}
         >
           <span>＋</span>
           Create Ticket
         </button>
         {currentUser?.role === "ADMIN" && (
-  <button
-    className={`menu-item ${
-      activePage === "deleted"
-        ? "active"
-        : ""
-    }`}
-    onClick={() =>
-      setActivePage("deleted")
-    }
-  >
-    <span>◫</span>
-    Deleted Tickets
-  </button>
-)}
+        <button
+          className={`menu-item ${
+            activePage === "deleted"
+              ? "active"
+              : ""
+          }`}
+          onClick={() =>{
+            setActivePage("deleted")
+            setMobileSidebarOpen(false);
+          }}
+        >
+            <span>◫</span>
+            Deleted Tickets
+          </button>
+        )}
 
       </div>
 
@@ -103,9 +124,10 @@ function Sidebar({
               ? "active"
               : ""
           }`}
-          onClick={() =>
+          onClick={() =>{
             setActivePage("assistant")
-          }
+            setMobileSidebarOpen(false);
+          }}
         >
           <span>✦</span>
           AI Assistant
@@ -168,6 +190,14 @@ function Sidebar({
       </div>
 
     </aside>
+
+    {mobileSidebarOpen && (
+        <div
+          className="mobile-sidebar-overlay"
+          onClick={() => setMobileSidebarOpen(false)}
+        ></div>
+      )}
+    </>
   );
 }
 

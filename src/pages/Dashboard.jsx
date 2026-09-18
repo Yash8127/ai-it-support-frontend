@@ -11,6 +11,7 @@ function Dashboard({
   onSelectTicket,
   currentUser,
   unreadNotificationCount,
+  setMobileSidebarOpen,
 }) {
       const totalTickets = analytics?.totalTickets || 0;
 
@@ -60,6 +61,7 @@ function Dashboard({
         currentUser={currentUser}
         unreadNotificationCount={unreadNotificationCount}
          setActivePage={setActivePage}
+         setMobileSidebarOpen={setMobileSidebarOpen}
       />
 
       {error && (

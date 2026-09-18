@@ -4,10 +4,18 @@ function Header({
     currentUser,
     unreadNotificationCount,
     setActivePage,
+    setMobileSidebarOpen,
 
   }) {
   return (
     <header className="top-header">
+       <button
+        className="mobile-menu-button"
+        type="button"
+        onClick={() => setMobileSidebarOpen(true)}
+      >
+        ☰
+      </button>
       <div>
         <h1>{title}</h1>
         <p>{subtitle}</p>

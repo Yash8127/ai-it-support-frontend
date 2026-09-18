@@ -81,6 +81,7 @@ const [loginError, setLoginError] =
     useState([]);
     const [analytics, setAnalytics] = useState(null);
     const [unreadNotificationCount, setUnreadNotificationCount] = useState(0);
+    const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   const [loading, setLoading] =
     useState(true);
@@ -185,11 +186,50 @@ const [loginError, setLoginError] =
 
   const [chatMessages, setChatMessages] =
     useState([
-    {
+      {
         role: "assistant",
-        text: `Hello ${currentUser?.username || "there"}! 👋 I'm your AI IT Support Assistant. How can I help you today?`
+        text: `Hello ${
+          currentUser?.username || "there"
+        }! 👋
+
+  I'm your AI IT Support Assistant. I can help you find and understand your support tickets.
+
+  You can ask me things like:
+  • Show me all open tickets
+  • Show me critical tickets
+  • Find laptop issues
+  • Show me high priority tickets
+  • What is the status of ticket 12?
+
+  How can I help you today?`,
       },
     ]);
+    
+    useEffect(() => {
+  if (!currentUser?.username) {
+    return;
+  }
+
+  setChatMessages([
+    {
+      role: "assistant",
+      text: `Hello ${
+        currentUser.username
+      }! 👋
+
+I'm your AI IT Support Assistant. I can help you find and understand your support tickets.
+
+You can ask me things like:
+• Show me all open tickets
+• Show me critical tickets
+• Find laptop issues
+• Show me high priority tickets
+• What is the status of ticket 12?
+
+How can I help you today?`,
+    },
+  ]);
+}, [currentUser?.username]);
 
   const [chatLoading, setChatLoading] =
     useState(false);
@@ -821,6 +861,7 @@ const [loginError, setLoginError] =
         );
 
         await loadTickets();
+        await loadNotificationCount();
         
       } catch (err) {
         console.error(err);
@@ -839,6 +880,109 @@ const [loginError, setLoginError] =
   // =========================================================
   // AI CHAT
   // =========================================================
+
+const formatAIResponse = (data) => {
+  const text = data.trim();
+
+  // Handle ticket-list responses
+  if (text.includes("Ticket ID:")) {
+
+    const ticketBlocks =
+      text.split(/(?=Ticket ID:)/);
+
+    const validTickets =
+      ticketBlocks.filter((block) =>
+        block.includes("Ticket ID:")
+      );
+
+    if (validTickets.length > 0) {
+
+      let formatted =
+        `🎫 Found ${validTickets.length} ticket${
+          validTickets.length === 1 ? "" : "s"
+        }\n\n`;
+
+      validTickets.forEach((block) => {
+
+        const id =
+          block.match(/Ticket ID:\s*(.*)/)?.[1];
+
+        const title =
+          block.match(/Title:\s*(.*)/)?.[1];
+
+        const category =
+          block.match(/Category:\s*(.*)/)?.[1];
+
+        const priority =
+          block.match(/Priority:\s*(.*)/)?.[1];
+
+        const status =
+          block.match(/Status:\s*(.*)/)?.[1];
+
+        formatted +=
+          `🎫 Ticket #${id}\n` +
+          `Title: ${title}\n` +
+          `Category: ${category}\n` +
+          `Priority: ${priority}\n` +
+          `Status: ${status}\n\n`;
+      });
+
+      return formatted.trim();
+    }
+  }
+
+  // Handle the structured tool response
+  if (text.includes("TOOL_SUCCESS")) {
+
+    const countMatch =
+      text.match(/TICKET_COUNT=(\d+)/);
+
+    const count =
+      countMatch ? countMatch[1] : "0";
+
+    const ticketBlocks =
+      text.split("TICKET\n").slice(1);
+
+    if (ticketBlocks.length === 0) {
+      return text;
+    }
+
+    let formatted =
+      `🎫 Found ${count} ticket${
+        count === "1" ? "" : "s"
+      }:\n\n`;
+
+    ticketBlocks.forEach((block) => {
+
+      const id =
+        block.match(/ID=(.*)/)?.[1];
+
+      const title =
+        block.match(/TITLE=(.*)/)?.[1];
+
+      const category =
+        block.match(/CATEGORY=(.*)/)?.[1];
+
+      const priority =
+        block.match(/PRIORITY=(.*)/)?.[1];
+
+      const status =
+        block.match(/STATUS=(.*)/)?.[1];
+
+      formatted +=
+        `🎫 Ticket #${id}\n` +
+        `Title: ${title}\n` +
+        `Category: ${category}\n` +
+        `Priority: ${priority}\n` +
+        `Status: ${status}\n\n`;
+    });
+
+    return formatted.trim();
+  }
+
+  // Keep normal AI responses unchanged
+  return text;
+};
 
   const sendChatMessage =
     async (e) => {
@@ -904,12 +1048,15 @@ const [loginError, setLoginError] =
         const data =
           await response.text();
 
+        const formattedResponse =
+          formatAIResponse(data);
+
         setChatMessages(
           (previousMessages) => [
             ...previousMessages,
             {
               role: "assistant",
-              text: data,
+              text: formattedResponse,
             },
           ]
         );
@@ -977,6 +1124,7 @@ const [loginError, setLoginError] =
             currentUser={currentUser}
             unreadNotificationCount={unreadNotificationCount}
             setActivePage={setActivePage}
+            setMobileSidebarOpen={setMobileSidebarOpen}
             
           />
         );
@@ -994,13 +1142,18 @@ const [loginError, setLoginError] =
             setCreatedTicket={setCreatedTicket}
             creatingTicket={creatingTicket}
             currentUser={currentUser}
-            
+            setMobileSidebarOpen={setMobileSidebarOpen}
             />
           );
       
       case "deleted":
         return (
-          <DeletedTickets />
+          <DeletedTickets
+          currentUser={currentUser}
+          unreadNotificationCount={unreadNotificationCount}
+          setActivePage={setActivePage}
+          setMobileSidebarOpen={setMobileSidebarOpen}
+          />
         );
 
       case "notifications":
@@ -1009,6 +1162,8 @@ const [loginError, setLoginError] =
             currentUser={currentUser}
             unreadNotificationCount={unreadNotificationCount}
              setUnreadNotificationCount={setUnreadNotificationCount}
+             setActivePage={setActivePage}
+             setMobileSidebarOpen={setMobileSidebarOpen}
           />
         );
 
@@ -1023,6 +1178,7 @@ const [loginError, setLoginError] =
             currentUser={currentUser}
             unreadNotificationCount={unreadNotificationCount}       
             setActivePage={setActivePage}
+            setMobileSidebarOpen={setMobileSidebarOpen}
           />
         );
 
@@ -1044,6 +1200,7 @@ const [loginError, setLoginError] =
             }
              currentUser={currentUser}
              unreadNotificationCount={unreadNotificationCount}
+             setMobileSidebarOpen={setMobileSidebarOpen}
           />
         );
     }
@@ -1151,6 +1308,8 @@ const handleUnauthorized = () => {
         }
         onLogout={logoutUser}
         currentUser={currentUser}
+        mobileSidebarOpen={mobileSidebarOpen}
+        setMobileSidebarOpen={setMobileSidebarOpen}
       />
 
       <main className="main-content">

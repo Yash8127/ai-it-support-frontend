@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
+import Header from "../components/Header";
 
-function DeletedTickets() {
+function DeletedTickets({
+  currentUser,
+  unreadNotificationCount,
+  setActivePage,
+  setMobileSidebarOpen,
+}) {
 
   const [deletedTickets, setDeletedTickets] =
     useState([]);
@@ -72,14 +78,15 @@ function DeletedTickets() {
 
  return (
   <>
-    <div className="page-header">
-      <div>
-        <h1>Deleted Tickets</h1>
-        <p>
-          Review tickets removed from the active support system.
-        </p>
-      </div>
-
+      <Header
+      title="Deleted Tickets"
+      subtitle="Review tickets removed from the active support system."
+      currentUser={currentUser}
+      unreadNotificationCount={unreadNotificationCount}
+      setActivePage={setActivePage}
+      setMobileSidebarOpen={setMobileSidebarOpen}
+    />
+   <div className="page-header">
       <div className="audit-badge">
         <span>◫</span>
         Admin Audit Log

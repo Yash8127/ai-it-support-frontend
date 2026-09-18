@@ -11,6 +11,7 @@ function CreateTicket({
   setCreatedTicket,
   creatingTicket,
   currentUser,
+  setMobileSidebarOpen,
 }) {
   return (
     <>
@@ -20,6 +21,7 @@ function CreateTicket({
         currentUser={currentUser}
         unreadNotificationCount={unreadNotificationCount}
         setActivePage={setActivePage}
+        setMobileSidebarOpen={setMobileSidebarOpen}
       />
 
       <div className="form-layout">

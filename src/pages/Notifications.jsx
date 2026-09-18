@@ -4,7 +4,10 @@ import Header from "../components/Header";
 function Notifications({ 
     currentUser, 
     unreadNotificationCount , 
-    setUnreadNotificationCount,}) {
+    setUnreadNotificationCount,
+     setActivePage,
+    setMobileSidebarOpen,
+    }) {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -83,6 +86,8 @@ function Notifications({
         subtitle="Stay updated with your ticket activity."
         currentUser={currentUser}
         unreadNotificationCount={unreadNotificationCount}
+         setActivePage={setActivePage}
+         setMobileSidebarOpen={setMobileSidebarOpen}
       />
 
       <div className="notifications-container">

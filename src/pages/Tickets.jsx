@@ -15,6 +15,7 @@ function Tickets({
   currentUser,
   unreadNotificationCount,
   setActivePage,
+   setMobileSidebarOpen,
 }) {
   const filteredTickets = tickets.filter(
     (ticket) => {
@@ -58,9 +59,10 @@ function Tickets({
         currentUser={currentUser}
         unreadNotificationCount={unreadNotificationCount}
         setActivePage={setActivePage}
+        setMobileSidebarOpen={setMobileSidebarOpen}
       />
 
-      <div className="panel">
+      <div className="panel tickets-panel">
 
         {/* FILTERS */}
 
