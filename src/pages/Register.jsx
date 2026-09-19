@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "./Auth.css";
 
 function Register({
   registerForm,
@@ -10,149 +11,180 @@ function Register({
   onGoToLogin,
 }) {
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] =
+    useState(false);
 
   return (
     <div className="auth-page">
 
-      {/* LEFT BRANDING SECTION */}
-      <div className="auth-brand-section">
+      {/* =====================================================
+          BACKGROUND DECORATION
+          ===================================================== */}
 
-        <div className="auth-brand">
-
-          <div className="auth-brand-icon">
-            🤖
-          </div>
-
-          <div>
-            <h1>AI IT Support</h1>
-            <span>Service Management</span>
-          </div>
-
-        </div>
+      <div className="auth-bg-circle auth-bg-circle-one"></div>
+      <div className="auth-bg-circle auth-bg-circle-two"></div>
+      <div className="auth-bg-circle auth-bg-circle-three"></div>
 
 
-        <div className="auth-brand-content">
+      {/* =====================================================
+          MAIN AUTH CONTAINER
+          ===================================================== */}
 
-          <div className="auth-eyebrow">
-            <span>✦</span>
-            GET STARTED WITH AI IT SUPPORT
-          </div>
+      <div className="auth-container">
 
-          <h2>
-            Build smarter.
-            <br />
-            <span>Support better.</span>
-          </h2>
+        {/* ===================================================
+            LEFT BRANDING SECTION
+            =================================================== */}
 
-          <p>
-            Create your account and experience an
-            intelligent IT support platform designed
-            to simplify ticket management.
-          </p>
+        <section className="auth-brand-section">
 
+          {/* BRAND */}
 
-          <div className="auth-features">
+          <div className="auth-brand">
 
-            <div className="auth-feature">
-
-              <div className="auth-feature-icon">
-                ✦
-              </div>
-
-              <div>
-                <strong>AI-Powered Assistance</strong>
-
-                <span>
-                  Get intelligent suggestions and
-                  automated ticket analysis.
-                </span>
-              </div>
-
+            <div className="auth-brand-icon">
+              🤖
             </div>
 
-
-            <div className="auth-feature">
-
-              <div className="auth-feature-icon">
-                ✓
-              </div>
-
-              <div>
-                <strong>Organized Support</strong>
-
-                <span>
-                  Manage your IT requests from one
-                  centralized platform.
-                </span>
-              </div>
-
-            </div>
-
-
-            <div className="auth-feature">
-
-              <div className="auth-feature-icon">
-                🔒
-              </div>
-
-              <div>
-                <strong>Secure Account</strong>
-
-                <span>
-                  Your account is protected with secure
-                  authentication.
-                </span>
-              </div>
-
+            <div>
+              <h1>AI IT Support</h1>
+              <span>Service Management</span>
             </div>
 
           </div>
 
-        </div>
+
+          {/* BRAND CONTENT */}
+
+          <div className="auth-brand-content">
+
+            <div className="auth-eyebrow">
+              <span>✦</span>
+              GET STARTED WITH AI IT SUPPORT
+            </div>
 
 
-        <div className="auth-brand-footer">
-
-          <span>AI-powered IT support platform</span>
-
-          <span>•</span>
-
-          <span>Secure & Intelligent</span>
-
-        </div>
-
-      </div>
+            <h2>
+              Build smarter.
+              <br />
+              <span>Support better.</span>
+            </h2>
 
 
-      {/* RIGHT REGISTER SECTION */}
-      <div className="auth-form-section">
+            <p>
+              Create your account and experience an
+              intelligent IT support platform designed
+              to simplify ticket management.
+            </p>
 
-        {/* MOBILE BRAND */}
-        <div className="auth-mobile-brand">
 
-          <div className="auth-brand-icon">
-            🤖
+            {/* FEATURES */}
+
+            <div className="auth-features">
+
+              <div className="auth-feature">
+
+                <div className="auth-feature-icon">
+                  ✦
+                </div>
+
+                <div>
+                  <strong>
+                    AI-Powered Assistance
+                  </strong>
+
+                  <span>
+                    Get intelligent suggestions and
+                    automated ticket analysis.
+                  </span>
+                </div>
+
+              </div>
+
+
+              <div className="auth-feature">
+
+                <div className="auth-feature-icon">
+                  ◈
+                </div>
+
+                <div>
+                  <strong>
+                    Organized Support
+                  </strong>
+
+                  <span>
+                    Manage your IT requests from one
+                    centralized platform.
+                  </span>
+                </div>
+
+              </div>
+
+
+              <div className="auth-feature">
+
+                <div className="auth-feature-icon">
+                  ♢
+                </div>
+
+                <div>
+                  <strong>
+                    Secure Account
+                  </strong>
+
+                  <span>
+                    Your account is protected with secure
+                    authentication.
+                  </span>
+                </div>
+
+              </div>
+
+            </div>
+
           </div>
 
-          <div>
-            <strong>AI IT Support</strong>
-            <span>Service Management</span>
+
+          {/* LEFT FOOTER */}
+
+          <div className="auth-brand-footer">
+
+            <span>
+              AI-powered IT support platform
+            </span>
+
+            <span className="auth-footer-dot">
+              •
+            </span>
+
+            <span>
+              Secure & Intelligent
+            </span>
+
           </div>
 
-        </div>
+        </section>
 
 
-        <div className="auth-form-card">
+        {/* ===================================================
+            RIGHT REGISTER SECTION
+            =================================================== */}
 
-          {/* HEADING */}
-          <div className="auth-form-heading">
+        <section className="auth-form-section">
+
+          <div className="auth-form-card">
+
+            {/* TOP ICON */}
 
             <div className="auth-form-icon">
               +
             </div>
 
-            <div>
+
+            {/* HEADING */}
+
+            <div className="auth-form-heading">
 
               <h2>
                 Create your account
@@ -165,258 +197,269 @@ function Register({
 
             </div>
 
-          </div>
 
+            {/* ERROR */}
 
-          {/* ERROR */}
-          {registerError && (
+            {registerError && (
 
-            <div className="auth-error">
+              <div className="auth-error">
 
-              <span>⚠</span>
-
-              <p>
-                {registerError}
-              </p>
-
-            </div>
-
-          )}
-
-
-          {/* SUCCESS */}
-          {registerSuccess && (
-
-            <div className="auth-success">
-
-              <span>✓</span>
-
-              <p>
-                {registerSuccess}
-              </p>
-
-            </div>
-
-          )}
-
-
-          <form onSubmit={onRegister}>
-
-            {/* USERNAME */}
-            <div className="auth-form-group">
-
-              <label>
-                Username
-              </label>
-
-              <div className="auth-input-wrapper">
-
-                <span className="auth-input-icon">
-                  ◉
+                <span>
+                  ⚠
                 </span>
 
-                <input
-                  type="text"
-                  value={registerForm.username}
-                  onChange={(e) =>
-                    setRegisterForm((previous) => ({
-                      ...previous,
-                      username: e.target.value,
-                    }))
-                  }
-                  placeholder="Choose a username"
-                  required
-                  disabled={registerLoading}
-                />
+                <p>
+                  {registerError}
+                </p>
 
               </div>
 
-            </div>
+            )}
 
 
-            {/* PASSWORD */}
-            <div className="auth-form-group">
+            {/* SUCCESS */}
 
-              <label>
-                Password
-              </label>
+            {registerSuccess && (
 
-              <div className="auth-input-wrapper">
+              <div className="auth-success">
 
-                <span className="auth-input-icon">
-                  🔒
+                <span>
+                  ✓
                 </span>
 
-                <input
-                  type={
-                    showPassword
-                      ? "text"
-                      : "password"
-                  }
-                  value={registerForm.password}
-                  onChange={(e) =>
-                    setRegisterForm((previous) => ({
-                      ...previous,
-                      password: e.target.value,
-                    }))
-                  }
-                  placeholder="Create a password"
-                  required
-                  disabled={registerLoading}
-                />
-
-                <button
-                  type="button"
-                  className="password-toggle"
-                  onClick={() =>
-                    setShowPassword(
-                      (previous) => !previous
-                    )
-                  }
-                  disabled={registerLoading}
-                  aria-label={
-                    showPassword
-                      ? "Hide password"
-                      : "Show password"
-                  }
-                >
-                  {showPassword
-                    ? "🙈"
-                    : "👁"}
-                </button>
+                <p>
+                  {registerSuccess}
+                </p>
 
               </div>
 
-            </div>
+            )}
 
 
-            {/* CONFIRM PASSWORD */}
-            <div className="auth-form-group">
+            {/* FORM */}
 
-              <label>
-                Confirm Password
-              </label>
+            <form onSubmit={onRegister}>
 
-              <div className="auth-input-wrapper">
+              {/* USERNAME */}
 
-                <span className="auth-input-icon">
-                  🔒
-                </span>
+              <div className="auth-form-group">
 
-                <input
-                  type={
-                    showConfirmPassword
-                      ? "text"
-                      : "password"
-                  }
-                  value={
-                    registerForm.confirmPassword
-                  }
-                  onChange={(e) =>
-                    setRegisterForm((previous) => ({
-                      ...previous,
-                      confirmPassword:
-                        e.target.value,
-                    }))
-                  }
-                  placeholder="Confirm your password"
-                  required
-                  disabled={registerLoading}
-                />
+                <label>
+                  Username
+                </label>
 
-                <button
-                  type="button"
-                  className="password-toggle"
-                  onClick={() =>
-                    setShowConfirmPassword(
-                      (previous) => !previous
-                    )
-                  }
-                  disabled={registerLoading}
-                  aria-label={
-                    showConfirmPassword
-                      ? "Hide password"
-                      : "Show password"
-                  }
-                >
-                  {showConfirmPassword
-                    ? "🙈"
-                    : "👁"}
-                </button>
+                <div className="auth-input-wrapper">
+
+                  <span className="auth-input-icon">
+                    ◉
+                  </span>
+
+                  <input
+                    type="text"
+                    value={registerForm.username}
+                    onChange={(e) =>
+                      setRegisterForm((previous) => ({
+                        ...previous,
+                        username: e.target.value,
+                      }))
+                    }
+                    placeholder="Choose a username"
+                    required
+                    disabled={registerLoading}
+                  />
+
+                </div>
 
               </div>
 
-            </div>
+
+              {/* PASSWORD */}
+
+              <div className="auth-form-group">
+
+                <label>
+                  Password
+                </label>
+
+                <div className="auth-input-wrapper">
+
+                  <span className="auth-input-icon">
+                    🔒
+                  </span>
+
+                  <input
+                    type={
+                      showPassword
+                        ? "text"
+                        : "password"
+                    }
+                    value={registerForm.password}
+                    onChange={(e) =>
+                      setRegisterForm((previous) => ({
+                        ...previous,
+                        password: e.target.value,
+                      }))
+                    }
+                    placeholder="Create a password"
+                    required
+                    disabled={registerLoading}
+                  />
+
+                  <button
+                    type="button"
+                    className="password-toggle"
+                    onClick={() =>
+                      setShowPassword(
+                        (previous) => !previous
+                      )
+                    }
+                    disabled={registerLoading}
+                    aria-label={
+                      showPassword
+                        ? "Hide password"
+                        : "Show password"
+                    }
+                  >
+                    {showPassword
+                      ? "🙈"
+                      : "👁"}
+                  </button>
+
+                </div>
+
+              </div>
 
 
-            {/* REGISTER BUTTON */}
-            <button
-              type="submit"
-              className="auth-submit-button"
-              disabled={registerLoading}
-            >
+              {/* CONFIRM PASSWORD */}
+
+              <div className="auth-form-group">
+
+                <label>
+                  Confirm Password
+                </label>
+
+                <div className="auth-input-wrapper">
+
+                  <span className="auth-input-icon">
+                    🔒
+                  </span>
+
+                  <input
+                    type={
+                      showConfirmPassword
+                        ? "text"
+                        : "password"
+                    }
+                    value={
+                      registerForm.confirmPassword
+                    }
+                    onChange={(e) =>
+                      setRegisterForm((previous) => ({
+                        ...previous,
+                        confirmPassword:
+                          e.target.value,
+                      }))
+                    }
+                    placeholder="Confirm your password"
+                    required
+                    disabled={registerLoading}
+                  />
+
+                  <button
+                    type="button"
+                    className="password-toggle"
+                    onClick={() =>
+                      setShowConfirmPassword(
+                        (previous) => !previous
+                      )
+                    }
+                    disabled={registerLoading}
+                    aria-label={
+                      showConfirmPassword
+                        ? "Hide password"
+                        : "Show password"
+                    }
+                  >
+                    {showConfirmPassword
+                      ? "🙈"
+                      : "👁"}
+                  </button>
+
+                </div>
+
+              </div>
+
+
+              {/* REGISTER BUTTON */}
+
+              <button
+                type="submit"
+                className="auth-submit-button"
+                disabled={registerLoading}
+              >
+
+                <span>
+                  {registerLoading
+                    ? "Creating account..."
+                    : "CREATE ACCOUNT"}
+                </span>
+
+                {!registerLoading && (
+                  <span className="auth-button-arrow">
+                    →
+                  </span>
+                )}
+
+              </button>
+
+            </form>
+
+
+            {/* LOGIN SWITCH */}
+
+            <div className="auth-switch">
 
               <span>
-                {registerLoading
-                  ? "Creating account..."
-                  : "Create Account"}
+                Already have an account?
               </span>
 
-              {!registerLoading && (
-                <span className="auth-button-arrow">
-                  →
-                </span>
-              )}
+              <button
+                type="button"
+                onClick={onGoToLogin}
+              >
+                Sign in
+                <span> →</span>
+              </button>
 
-            </button>
-
-          </form>
-
-
-          {/* LOGIN SWITCH */}
-          <div className="auth-switch">
-
-            <span>
-              Already have an account?
-            </span>
-
-            <button
-              type="button"
-              onClick={onGoToLogin}
-            >
-              Sign in
-              <span> →</span>
-            </button>
-
-          </div>
+            </div>
 
 
-          {/* SECURITY */}
-          <div className="auth-security">
+            {/* SECURITY */}
 
-            <span>🔒</span>
+            <div className="auth-security">
 
-            <div>
+              <div className="auth-security-icon">
+                🔒
+              </div>
 
-              <strong>
-                Secure registration
-              </strong>
+              <div>
 
-              <p>
-                Your credentials are protected with
-                secure password encryption.
-              </p>
+                <strong>
+                  Secure registration
+                </strong>
+
+                <p>
+                  Your credentials are protected with
+                  secure password encryption.
+                </p>
+
+              </div>
 
             </div>
 
           </div>
 
-        </div>
-
-
-        <div className="auth-mobile-footer">
-          AI-powered IT support platform
-        </div>
+        </section>
 
       </div>
 
