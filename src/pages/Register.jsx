@@ -272,6 +272,30 @@ function Register({
 
               </div>
 
+              {/* EMAIL */}
+
+              <div className="auth-form-group">
+                <label>Email</label>
+
+                <div className="auth-input-wrapper">
+                  <span className="auth-input-icon">✉</span>
+
+                  <input
+                    type="email"
+                    value={registerForm.email}
+                    onChange={(e) =>
+                      setRegisterForm((previous) => ({
+                        ...previous,
+                        email: e.target.value,
+                      }))
+                    }
+                    placeholder="Enter your email"
+                    required
+                    disabled={registerLoading}
+                  />
+                </div>
+              </div>
+
 
               {/* PASSWORD */}
 

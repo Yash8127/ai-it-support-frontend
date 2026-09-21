@@ -6,6 +6,8 @@ import "./App.css";
 // =========================================================
 import Register from "./pages/Register";
 import Login from "./pages/Login";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import Sidebar from "./components/Sidebar";
 import Dashboard from "./pages/Dashboard";
 import Tickets from "./pages/Tickets";
@@ -59,9 +61,19 @@ const [loginError, setLoginError] =
   const [showRegister, setShowRegister] =
     useState(false);
 
+  const [showForgotPassword, setShowForgotPassword] =
+  useState(false);
+
+  const [showResetPassword, setShowResetPassword] =
+  useState(false);
+
+  const isResetPasswordPage =
+  window.location.pathname === "/reset-password";
+
   const [registerForm, setRegisterForm] =
     useState({
       username: "",
+        email: "",
       password: "",
       confirmPassword: "",
     });
@@ -237,69 +249,94 @@ How can I help you today?`,
   // LOGINN USER
   // =========================================================
     const loginUser = async (e) => {
-      e.preventDefault();
+  e.preventDefault();
 
-      setLoginLoading(true);
-      setLoginError("");
+  setLoginLoading(true);
+  setLoginError("");
 
-      try {
-        const response = await fetch(
-          `${API_BASE}/api/auth/login`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(loginForm),
-          }
-        );
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(
-            data.message ||
-              "Invalid username or password"
-          );
-        }
-
-        localStorage.setItem(
-          "token",
-          data.token
-        );
-
-        localStorage.setItem(
-          "username",
-          data.username
-        );
-
-        localStorage.setItem(
-          "role",
-          data.role
-        );
-        setCurrentUser({
-        username: data.username,
-        role: data.role,
-      });
-
-        setIsAuthenticated(true);
-
-        setLoginForm({
-          username: "",
-          password: "",
-        });
-
-      } catch (err) {
-        console.error(err);
-
-        setLoginError(
-          err.message ||
-            "Unable to login. Please try again."
-        );
-      } finally {
-        setLoginLoading(false);
+  try {
+    const response = await fetch(
+      `${API_BASE}/api/auth/login`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(loginForm),
       }
-    };
+    );
+
+    // Read response as text first
+    const responseText = await response.text();
+
+    console.log("Login status:", response.status);
+    console.log("Login response:", responseText);
+
+    let data = {};
+
+    if (responseText.trim()) {
+      try {
+        data = JSON.parse(responseText);
+      } catch (jsonError) {
+        console.error(
+          "Invalid JSON response:",
+          responseText
+        );
+      }
+    }
+
+    if (!response.ok) {
+      throw new Error(
+        data.message ||
+          responseText ||
+          "Invalid username or password"
+      );
+    }
+
+    if (!data.token) {
+      throw new Error(
+        "Login response did not contain a token."
+      );
+    }
+
+    localStorage.setItem(
+      "token",
+      data.token
+    );
+
+    localStorage.setItem(
+      "username",
+      data.username
+    );
+
+    localStorage.setItem(
+      "role",
+      data.role
+    );
+
+    setCurrentUser({
+      username: data.username,
+      role: data.role,
+    });
+
+    setIsAuthenticated(true);
+
+    setLoginForm({
+      username: "",
+      password: "",
+    });
+
+  } catch (err) {
+    console.error(err);
+
+    setLoginError(
+      err.message ||
+        "Unable to login. Please try again."
+    );
+  } finally {
+    setLoginLoading(false);
+  }
+};
 
   // =========================================================
   // REGISTER USER
@@ -326,6 +363,8 @@ How can I help you today?`,
           const response = await fetch(
             `${API_BASE}/api/auth/register?username=${encodeURIComponent(
               registerForm.username
+            )}&email=${encodeURIComponent(
+              registerForm.email
             )}&password=${encodeURIComponent(
               registerForm.password
             )}`,
@@ -342,27 +381,43 @@ How can I help you today?`,
             );
           }
 
-          if (data === "Username already exists") {
-            setRegisterError(
-              "Username already exists. Please choose another username."
-            );
-            return;
-          }
+        if (data === "Username already exists") {
+          setRegisterError(
+            "Username already exists. Please choose another username."
+          );
+          return;
+        }
 
+        if (data === "Email already exists") {
+          setRegisterError(
+            "Email already exists. Please use another email address."
+          );
+          return;
+        }
+
+        if (data === "User registered successfully") {
           setRegisterSuccess(
             "Account created successfully! You can now sign in."
           );
 
-          setRegisterForm({
-            username: "",
-            password: "",
-            confirmPassword: "",
-          });
+           setRegisterForm({
+                username: "",
+                email: "",
+                password: "",
+                confirmPassword: "",
+              });
 
-          setTimeout(() => {
-            setShowRegister(false);
-            setRegisterSuccess("");
-          }, 1500);
+              setTimeout(() => {
+                setShowRegister(false);
+                setRegisterSuccess("");
+              }, 1500);
+
+              return;
+            }
+
+            setRegisterError(
+              "Unable to create account. Please try again."
+            );
 
         } catch (err) {
           console.error(err);
@@ -1252,6 +1307,51 @@ const handleUnauthorized = () => {
   // =========================================================
       if (!isAuthenticated) {
 
+         // RESET PASSWORD
+        if (isResetPasswordPage || showResetPassword) {
+          return (
+            <ResetPassword
+              onGoToLogin={() => {
+                setShowResetPassword(false);
+                setShowForgotPassword(false);
+                setShowRegister(false);
+                setLoginError("");
+
+                window.history.replaceState(
+                  {},
+                  "",
+                  "/"
+                );
+              }}
+               onGoToForgotPassword={() => {
+              setShowResetPassword(false);
+              setShowForgotPassword(true);
+              setShowRegister(false);
+              setLoginError("");
+
+              window.history.replaceState(
+                {},
+                "",
+                "/"
+              );
+            }}
+            />
+          );
+        }
+
+        // FORGOT PASSWORD
+        if (showForgotPassword) {
+          return (
+            <ForgotPassword
+              onGoToLogin={() => {
+                setShowForgotPassword(false);
+                setLoginError("");
+              }}
+            />
+          );
+        }
+
+        // REGISTER
         if (showRegister) {
           return (
             <Register
@@ -1270,6 +1370,7 @@ const handleUnauthorized = () => {
           );
         }
 
+        // LOGIN
         return (
           <Login
             loginForm={loginForm}
@@ -1279,6 +1380,12 @@ const handleUnauthorized = () => {
             loginError={loginError}
             onGoToRegister={() => {
               setShowRegister(true);
+              setShowForgotPassword(false);
+              setLoginError("");
+            }}
+            onGoToForgotPassword={() => {
+              setShowForgotPassword(true);
+              setShowRegister(false);
               setLoginError("");
             }}
           />

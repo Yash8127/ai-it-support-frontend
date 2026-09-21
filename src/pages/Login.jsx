@@ -8,6 +8,7 @@ function Login({
   loginLoading,
   loginError,
   onGoToRegister,
+   onGoToForgotPassword,
 }) {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -290,6 +291,18 @@ function Login({
 
                 </div>
 
+              </div>
+
+              {/* FORGOT PASSWORD */}
+              <div className="forgot-password-row">
+                <button
+                  type="button"
+                  className="forgot-password-link"
+                  onClick={onGoToForgotPassword}
+                  disabled={loginLoading}
+                >
+                  Forgot Password?
+                </button>
               </div>
 
 
