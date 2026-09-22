@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 
+import { API_BASE } from "../config/api";
+
 function TicketHistory({ ticketId,
                         ticketStatus,  
                         ticketPriority,
@@ -25,7 +27,7 @@ function TicketHistory({ ticketId,
         const token = localStorage.getItem("token");
 
         const response = await fetch(
-          `http://localhost:8080/api/tickets/${ticketId}/history`,
+          `${API_BASE}/api/tickets/${ticketId}/history`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

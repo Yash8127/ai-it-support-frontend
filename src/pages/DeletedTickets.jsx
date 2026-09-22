@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Header from "../components/Header";
+import { API_BASE } from "../config/api";
 
 function DeletedTickets({
   currentUser,
@@ -31,7 +32,7 @@ function DeletedTickets({
 
         const response =
           await fetch(
-            "http://localhost:8080/api/tickets/deleted",
+            `${API_BASE}/api/tickets/deleted`,
             {
               headers: {
                 Authorization:

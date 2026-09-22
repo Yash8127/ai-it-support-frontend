@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Header from "../components/Header";
-
+import { API_BASE } from "../config/api";
 function Notifications({ 
     currentUser, 
     unreadNotificationCount , 
@@ -16,7 +16,7 @@ function Notifications({
       const token = localStorage.getItem("token");
 
       const response = await fetch(
-        "http://localhost:8080/api/notifications",
+        `${API_BASE}/api/notifications`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -45,7 +45,7 @@ function Notifications({
     const token = localStorage.getItem("token");
 
     const response = await fetch(
-      `http://localhost:8080/api/notifications/${notificationId}/read`,
+      `${API_BASE}/api/notifications/${notificationId}/read`,
       {
         method: "PUT",
         headers: {

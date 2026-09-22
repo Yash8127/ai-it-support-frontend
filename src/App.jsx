@@ -496,7 +496,7 @@ How can I help you today?`,
           const token = localStorage.getItem("token");
 
           const response = await fetch(
-            "http://localhost:8080/api/dashboard/analytics",
+             `${API_BASE}/api/dashboard/analytics`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
